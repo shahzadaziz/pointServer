@@ -1,14 +1,40 @@
-<script src="/socket.io/socket.io.js"></script>
-<script src="/backbone.js"></script>
-<script src="/script.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backbone Demo APP</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script data-main="scripts/main" src="scripts/require.js"></script>
+    
+    
+</head>
+<body>
+    <div>
+    	<div id='client-console'>
+    
+    	</div>
+        <div  class='ul_wrap'>
+        <ul id="point-list">
+        </ul>
+        </div>
+    <!--    <div id="content">
+            <div id="content_view"></div>
+        </div>-->
+    </div>
+    
+   <!-- for git sync-->
 
-<script>
-  var socket = io.connect('http://localhost');
-  socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
-  });
-</script>
+</body>
+</html>
 
 
-Hello checking sockets.
+
+
+
+
+
+
+
+
+
+
