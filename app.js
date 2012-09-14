@@ -24,19 +24,21 @@
 	app.get('/', function (req, res) {
       console.log('Express Session id is ' + req.sessionID);
       res.sendfile(__dirname + '/index.html');
-          
+                
   });
 
   //Node Points REST API
   app.get('/points', function (req, res) {
 
-      var socketID = req.params.sid || null;
-      console.log('Express points route ' + req.params.sid);
+      var socketID = req.query['sid'] || null;
+      
+      console.log('Express points route ' + socketID);
       _file = fs.readFileSync(__dirname + '/data/points.json');
       _points = JSON.parse(_file);
       console.log('Socket log');
 
-      if(socketID)console.log(sockets[socketID]);
+      io.sockets.volatile.emit('msg_resp',{msg: 'New session connected' + socketID});
+      if(socketID)(sockets[socketID].emit('msg_resp',{msg: 'JSON fetch from Points API ' +  socketID}));
       
       res.send(_points);
   });

@@ -6,6 +6,8 @@
 /*******************************/
 
     var App = null; // Global APP object initialized by Bacbone
+    var oloungeShapes = null;
+    var s_count = 0;
     var DEBUG = true;
 
     function logger(log,caller){
@@ -22,10 +24,14 @@
         backbone: {
           deps: ["underscore", "jquery"],
           exports: "Backbone"
+        },
+        d3:{
+            deps: ['loung_svg_kit/shapes','loung_svg_kit/EventHandler'],
+            exports: 'd3'
         }
       }
     });
-    require(['jquery', 'underscore', 'backbone'], function ($, _, Backbone) {
+    require(['jquery', 'underscore', 'backbone','d3'], function ($, _, Backbone,d3) {
 
 
 
@@ -37,42 +43,75 @@
         Templates:{},
         socket: null,
         console : $('#client-console'),
-        IOserver: 'http://10.10.10.133'
+        IOserver: 'http://localhost'
     }        
                 
     App = pointClient;
-    
-
-
+  
 
     logger('Intitalizing','SocketIO');
     logger('Script Load callback','RequireJS');
-
-
-    
 
     /*Point client Views*/
     pointClient.Views.mainView =  Backbone.View.extend({
 
         initialize: function(){
+            this.collection = App.points = new pointClient.Collections.points();
+            App.points.bind('reset',this.render,this);
             App.socket = io.connect(pointClient.IOserver);
 
             var IO =  App.socket;
+            this.lounge_init();
 
+            //Todo Create a seperate IO library
             IO.on('handshake', function (data) {
                logger(data.msg,'SocketIO');
                logger(IO.socket.sessionid,'SocketIO');
 
                IO.emit('handshake', { msg: 'Bacbone response -  connected', userid: IO.socket.sessionid });
-
                logger('handshake Complete','SocketIO');
 
-               //fetch data 
-               this.collection = App.points = new pointClient.Collections.points();
-               this.collection.fetch();
+               App.points.fetch();
 
+               
              });
+
+            IO.on('msg_resp',function(data){
+                logger(data.msg,'SocketIO');
+            });
+
+        },
+
+        render: function(){
+            _.each(this.collection.models, function(point){
+                return (new pointClient.Views.point({model: point}).render());
+            })
+        },
+
+        lounge_init: function(){
+     
+            //D3 Intialization
+            svg = d3.select('svg').attr("width", "100%").attr("height", "100%");
+            domsvg = document.getElementsByTagName('svg').item(0);
+
+            oloungeShapes = App.oloungeShapes = new lounge_shapes(svg,domsvg);
+
         }
+    });
+
+
+    pointClient.Views.point = Backbone.View.extend({
+        initialize: function(){
+
+        },
+
+        render: function(){
+            //s_data = '{"s_dim" : 121 , "s_color" : "#CCC", "s_label" : "Google", "s_link":"google.com" }';
+            x = (s_count * parseInt(this.model.attributes.s_dim)+(s_count+20))
+            logger('x,count ; ' +  x + ',' + s_count,'d3');
+            App.oloungeShapes.element(this.model.toJSON(),x,10);
+        }
+
     });
 
 

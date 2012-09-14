@@ -1,28 +1,9 @@
 {
 "points": [
-                        {
-                            "id": "1",
-                            "label": "Google",
-                            "link": "http://Google.com",
-                            "user": "user1"
-                        },
-                        {
-                            "id": "2",
-                            "label": "Facebook",
-                            "link": "http://Facebook.com",
-                            "user": "user1"
-                        },
-                        {
-                            "id": "3",
-                            "label": "quora",
-                            "link": "http://quora.com",
-                            "user": "user1"
-                        },
-                        {
-                            "id": "4",
-                            "label": "Flickr",
-                            "link": "http://Flickr.com",
-                            "user": "user1"
-                        }
-                ]
+
+            {"s_dim" : 121 , "s_color" : "#CCC", "s_label" : "Google", "s_link":"google.com" },
+            {"s_dim" : 121 , "s_color" : "#259DFF", "s_label" : "Facebook", "s_link":"Facebook.com" },
+            {"s_dim" : 121 , "s_color" : "#222", "s_label" : "Flickr", "s_link":"Flickr.com" }
+            
+        ]
 }
