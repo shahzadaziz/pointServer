@@ -1,7 +1,7 @@
 // Point Node server : base APP
 // Author : Shahzad Aziz
   
-  PORT = 4000;
+  PORT = 1024;
 
   var fs = require('fs');
   var express= require('express');
@@ -35,43 +35,46 @@
       console.log('Express points route ' + socketID);
       _file = fs.readFileSync(__dirname + '/data/points.json');
       _points = JSON.parse(_file);
-      console.log('Socket log');
 
-      io.sockets.volatile.emit('msg_resp',{msg: 'New session connected' + socketID});
-      if(socketID)(sockets[socketID].emit('msg_resp',{msg: 'JSON fetch from Points API ' +  socketID}));
+      
+      if(socketID)(_sockets[socketID].emit('msg_resp',{msg: 'Points API called ' +  socketToUsers[socketID]}));
       
       res.send(_points);
   });
 
-
-
+  app.post('/points',function (req,res){
+    console.log('Post request received from');
+    console.log(req.query['sid']);
+  });
 
   //Node IO logic
-  var socket_users = {};
-  var sockets = {};
-	
+  var socketToUsers = {};
+  var userToSockets = {};
+	var _sockets = {};
+
 	io.sockets.on('connection', function (socket) {
-      
+
+      //Socket events
+      socket.on('username',function(data,callback){
+        socketToUsers[socket.id] = data.username;
+        userToSockets[data.username]  = socket.id;
+        _sockets[socket.id]  = socket;
+
+        console.log(data);
+
+        socket.broadcast.emit('msg_resp',{msg: 'New User connected ' + data.username});
+        callback({msg: 'Welcome ' +  data.username+ ', Fetching points..'});
+
+
+      });
+
+
       socket.emit('handshake', { msg: 'Node response - Connected' });
       
-      //Socket events
+      
       socket.on('handshake', function (data) {
         console.log(data);
         
-        sockets[socket.id] = socket;
-        socket_users[data.userid] = socket.id;
-
       });
-
-      socket.on('fetch', function (data) {
-        
-        console.log(data);
-        _file = fs.readFileSync(__dirname + '/data/points.json');
-        _points = JSON.parse(_file);
-        socket.emit(_points);
-
-      });
-
-
 
 	});

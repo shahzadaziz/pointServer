@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+<html>
 <head>
     <title>Backbone Demo APP</title>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="scripts/globals.js"></script>
     <link rel="stylesheet" href="style.css" />
     <script data-main="scripts/main" src="scripts/require.js"></script>
     
@@ -10,13 +12,6 @@
 </head>
 <body class="body">
     <header id="lounge_head">
-      <div id="head">
-        <div class="headimg">
-          <img src="images/head.png"></img>
-        </div>
-      <div class="add"/>
-      </div>
-
     </header>    
     
 	<div class="content">
@@ -26,10 +21,34 @@
         </div>
 
         <div class="right_content description">
-          <h2>Point Console</h2>	
-		  <div id='client-console'/>
+          <h2>Point Console</h2> 
+
+          <div>    
+              <input id="username" value="enter"></input>
+          </div>
+
+          <div class="toolbar">
+            <div class="connect"/></div>          
+            <div class="add"/></div>
+          </div>
+
+          
+
+    
+		      <div id='client-console'></div>
+
+          <div class= "addform">
+              <form>
+                <label>Point</label></label><input name="s_label" value=""></input>
+                <label>Link</label><input name="s_link" value=""></input>
+                <div class="save"/></div>
+              </form>
+              
+
+            
+          </div>
         </div>
-  	</div>
+	</div>
       
     
     <footer id="lounge_foot"></footer>
