@@ -12,7 +12,9 @@
         Views: {},
         Templates:{},
         socket: null,
-        IOserver: 'http://localhost'
+        IOserver: 'http://localhost',
+        sCount :0,
+        syncType: 'sync'
     }  
 
     function logger(log,caller){

@@ -1,10 +1,14 @@
 {
 "points": [
 
-            {"id": "222","s_dim" : 115 , "s_color" : "#F15D36", "s_label" : "Google", "s_link":"google.com" },
-            {"id": "212", "s_dim" : 115 , "s_color" : "#6B97C3", "s_label" : "Facebook", "s_link":"Facebook.com" },
-            {"id": "242","s_dim" : 115 , "s_color" : "#1DADC1", "s_label" : "Flickr", "s_link":"Flickr.com" },
-            {"id": "252","s_dim" : 115 , "s_color" : "#F15D36", "s_label" : "Quora", "s_link":"quora.com" }
-            
+            {"id": "222","s_dim" : 150 , "s_color" : "#F15D36", "s_label" : "Google", "s_link":"google.com" },
+            {"id": "212", "s_dim" : 150 , "s_color" : "#6B97C3", "s_label" : "Facebook", "s_link":"Facebook.com" },
+            {"id": "242","s_dim" : 150 , "s_color" : "#1DADC1", "s_label" : "Flickr", "s_link":"Flickr.com" },
+            {"id": "252","s_dim" : 150 , "s_color" : "#F15D36", "s_label" : "Quora", "s_link":"quora.com" },
+
+            {"id": "233", "s_dim" : 150 , "s_color" : "#C92F33", "s_label" : "Yahoo", "s_link":"Facebook.com" },
+            {"id": "241","s_dim" : 150 , "s_color" :  "#F33ADC", "s_label" : "Blogsppot", "s_link":"Flickr.com" },
+            {"id": "277","s_dim" : 150 , "s_color" : "#6544C2", "s_label" : "Twitter", "s_link":"quora.com" },
+            {"id": "2727","s_dim" : 150 , "s_color" : "#C9CD4D", "s_label" : "Jira", "s_link":"quora.com" }
         ]
 }

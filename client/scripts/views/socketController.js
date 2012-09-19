@@ -18,6 +18,13 @@ define(function() {
             IO.on('msg_resp',function(data){
                 logger(data.msg,'SocketIO');
             });
+
+
+            IO.on('data',function(data){
+                logger(data.msg,'SocketIO');
+                console.log(data.data);
+                pointClient.pointTable.dataCallback(data);
+            });
     	},
 
       registerUserName: function(_user){

@@ -1,249 +1,238 @@
 //static Class to generate SVG content
 // SVG related logic
 
-define(function() {
-    return  function(svg,domsvg){
+define(['models/point'],function(point) {
+    return  function(svg,domsvg,points){
     
-    function removeShape(oGWrap){
-      //select = d3.select(oGWrap);
-
-      oGWrap.transition().duration(1000).attr('opacity', '0').ease('fade');
-      //select.remove();
-
-      select = d3.selectAll('svg > g > rect');
-      console.log(select);
-      select.transition().duration(3000).attr('x', function(d,i){
-        tile_no =  (i+1)%5;
+  
+    function getGridLocation(index,s_data){
         
-        a =  ((tile_no) * 120) + ((tile_no+1) * 10);
-        console.log(a);
-        return a;
+        index= index +1; //Start logic with 1
+        var tableWidth = 700;
+        row_count = Math.floor(tableWidth /s_data.s_dim) -1;
+        row_num =   Math.ceil(index/row_count);
+        row_index= index%row_count;
+        row_index = (row_index == 0) ? row_count : row_index;
 
-      }).attr('y','10');
+        x_pad = ((row_index == 1) ? 0 : ((row_index-1) * s_data.s_dim));
+        y_pad = ((row_num == 1) ? 0 : ((row_num-1) * s_data.s_dim));
+        dim = {};
+        dim.y =  (row_num * 10) + y_pad;
+        dim.x = (row_index * 10) + x_pad;
+        return dim;
 
-
-        /*tile_no =  (i+1)%5;
-        if(i < 5){ //next row
-          return 10;
-        }else{
-          rowno = ((String)(i+1));
-          rowno = rowno.slice(0, 1);
-          rowno = parseInt(rowno);
-          
-          
-          
-          return ((rowno -1)* this.tile_width) + (rowno * 10);
-        }
-      })*/
-    };
-
-    
-
-
-    function getShapeElement(oElement){
-
-      while (oElement.nodeName != 'svg'){
-        if(oElement.getAttribute('g') ==1){
-          return oElement;
-        }
-        oElement = oElement.parentElement;
-      }
-      return null;
-    };
-
-    function addShape(jsonData){
-      var s_data = '{"s_dim" : 121 , "s_color" : "#0098DA", "s_label" : "Facebook", "s_link":"www.facebook.com", "Tags":["top","social"]}';
-      var oGlist = this.domsvg.getElementsByTagName('g');
-      oLastElm = oGlist.item(oGlist.length -1);
-      oLastElm = getShapeElement(oLastElm);
-      
-      
-      oBox = getbbox(oLastElm);
-      t_count = s_count + 1;
-
-      tile_no =  s_count%5;
-      if(tile_no == 0){ //next row
-        
-        y = oBox.y + this.tile_width + 10;
-      }else{
-        
-        y = oBox.y;
-        
-      }
-      x = ((tile_no) * this.tile_width) + ((tile_no+1) * 10);
-      console.log(tile_no);
-      console.log(oBox);
-      console.log(x);
-      console.log(y);
-
-      this.element(s_data,x,y);
-
-    };
-
-    function getbbox(oShape, blnRect){
-      var oBox = {};
-      
-      oShape = d3.select(oShape).select('rect');
-
-      oBox.height = parseInt(oShape.attr('height'));
-      oBox.width = parseInt(oShape.attr('width'));
-      oBox.x = parseInt(oShape.attr('x'));
-      oBox.y = parseInt(oShape.attr('y'));
-      oBox.by = parseInt(oBox.y) + parseInt(oBox.height);
-      oBox.rx = parseInt(oBox.x) + parseInt(oBox.width);
-
-      return oBox;
-
-    };
-
-    function transitionEnd(){
-        d3.select(this).remove();
     }
 
-    function addAll(){
+    function _shapeCreateLabels(containers){
       
+      containers.append("text")
+          .attr('class','label')
+          .attr('pointer-events','none')
+          .attr('x' ,function(d,i) {return d.x + 10;})
+          .attr("y", function(d,i) {return d.y + 40;}).text(function(d,i) {return d.s_label;})
+          .attr('fill',this.baseText)
+          .attr('style',this.baseTextStyle)
+          .attr('text-antialiasing','true');
+
     }
 
-    function removeAll(){
+
+    function _shapeCreateHoverControls(containers){
+      containers = containers.append('g').attr('class','hover').attr('opacity', '0');
+
+      containers.append('g')
+      .append("rect").attr("width" , "18").attr("height","18").attr("x", function(d,i) {return d.x + 30;}).attr("y", function(d,i) {return d.y + 95;}).attr("fill",'#C2C7BE').attr('pointer-events','none')
+      .append("text").text("x").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 14px;').attr("x", function(d,i) {return d.x + 34;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill",this.baseText).attr('pointer-events','none');
+
+      containers.append('g')
+      .append("text").text("open >").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 12px;').attr("x", function(d,i) {return d.x + 74;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill","#000").attr('pointer-events','none');
+
+      //Favicon
+      containers.append('image')
+      .attr('x', function(d,i) {return d.x + 8;}).attr('y', function(d,i) {return d.y + 95;}).attr('height',14).attr('width',14).attr('preserveAspectRatio', 'none')
+      .attr('xlink:href',  function(d,i) {return 'http://www.google.com/s2/favicons?domain=' + d.s_link;}).attr('opacity', '0');
+
+    }
+
+    function _shapeCreateRect(containers){
+      var rects = containers.append('rect')
+            .attr('class','shape')
+            .attr("width", function(s_data,i){ return s_data.s_dim;})
+            .attr("height", '0')
+            .attr("fill", function(s_data,i){ return s_data.s_color;})
+            .attr("x", function(s_data,i){ x = getGridLocation(i,s_data).x; s_data.x = x; return x;})
+            .attr("y", function(s_data,i){ y = getGridLocation(i,s_data).y; s_data.y = y; return y;});
+
+      return rects; 
+    }
+
+
+ 
+
+    function drawAll(jsonObj){
       
+      var selection = svg.selectAll('.tiles')
+        .data(jsonObj);
+
+      var containers = selection.enter()
+        .append('g')
+          .attr('class','tiles')
+          .attr("opacity", 0)
+          .attr('index' ,function(d,i){
+              //function for container specific logic
+              
+              //this.points.get(d);
+              pointClient.sCount ++;
+              on_click(this,d);
+              on_mouseover(this);
+              on_mouseout(this);
+              return i;
+
+           })
+          .attr("g","1")
+          .attr('link',function(d,i){ return d.s_link})
+          .attr('label',function(d,i){ return d.s_label})
+          .attr('jsondata', function(d,i){ return JSON.stringify(d);});
+                    /*
+      selection.exit().transition().delay(function(d,i){return i* 50})
+        .duration(this.DURATION_S1K).attr('opacity','0')
+        .each('end',function(){d3.select(this).remove(); 
+          pointClient.shapes.renderAll(pointClient.pointTable.collection);
+        });*/
+
+      var rects = this.shapeCreateRect(containers);
+
+      containers.append('image')
+      .attr('x', function(d,i) {return d.x;}).attr('y', function(d,i) {return d.y;}).attr('height',function(d,i) { return d.s_dim})
+      //.attr('width',function(d,i) { return d.s_dim})
+      .attr('preserveAspectRatio', 'true')
+      .attr('xlink:href',  'images/aa.jpg');
+/*
+      setInterval(function(containers){ 
+          // Content randomizer :: 
+
+          svg.selectAll('.tiles > image').transition().duration(1000).delay(function(d,i){return (Math.floor((Math.random()*10)+1) *i)}).attr('width',function(d,i){
+            return ((Math.random()*0)+1) ? 150: 0;
+          });
+
+      }, 4000);
+*/
+
+      //labels
+      this.shapeCreateLabels(containers);      
+
+      //toolbar controls
+      this.shapeCreateHoverControls(containers);
+
+      //transitions 
+      containers.transition().delay(function(d,i){return i* 50}).duration(this.DURATION_S1K).attr('opacity','1');
+      rects.transition().delay(function(d,i){return i* 50}).duration(this.DURATION_1K).attr('height', function(d,i) {return d.s_dim;}).ease('bounce');        
+
+
+    }
+
+
+    function removeAll(blnRender){
+      pointClient.blnRender = blnRender;
+
       var select = d3.selectAll('svg > g');
       select.transition()
         .duration(this.DURATION_S1K)
         .delay(function(d, i) { return i * 100; })
         .attr("transform", "scale(1,0.001)")
-        .each('end',transitionEnd);
+        .each('end',function(d,i){
+          
+          d3.select(this).remove();
+          pointClient.sCount--;
+         
+          if(pointClient.blnRender &&(pointClient.sCount ==0)){
+            pointClient.pointTable.render();
+          } 
+          });
       
     }
-    function createElement(s_jsondata,x,y){
 
-      s_data = s_jsondata//$.parseJSON(s_jsondata);
-      
-      var oGWrap = svg.append("g")
-      .attr("opacity", 0)
-      .attr("g","1")
-      .attr('link',s_data.s_link)
-      .attr('label',s_data.s_label)
-      .attr('jsondata', JSON.stringify(s_jsondata));
-      
-      var oElm =  oGWrap.append("rect")
-        .attr("x", x).attr("y",y)
-        .attr("width", s_data.s_dim).attr("height", 0).attr("fill", s_data.s_color);
-
-      var oText = oGWrap.append("text")
-          .attr('pointer-events','none')
-          .attr('x' ,x + 10)
-          .attr("y", y + 40).text(s_data.s_label)
-          .attr('fill',this.baseText)
-          .attr('style',this.baseTextStyle)
-          .attr('text-antialiasing','true');
-
-      
-      //Toolbar controls
-      var oGToolbar = oGWrap.append("g").attr("display","none");
-
-      var oGDelete = oGToolbar.append("g")
-      oGDelete.append("rect").attr("width" , "18").attr("height","18").attr("x", x+30).attr("y", y+95).attr("fill",'#C2C7BE').attr('pointer-events','none');
-      oGDelete.append("text").text("x").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 14px;').attr("x", x+34).attr("y", y+107).attr("fill",this.baseText).attr('pointer-events','none');
-
-      var oGEdit = oGToolbar.append("g")
-      oGEdit.append("rect").attr("width" , "18").attr("height","18").attr("x", x+50).attr("y", y+95).attr("fill",'#C2C7BE').attr('pointer-events','none');
-      oGEdit.append("text").text("e").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 14px;').attr("x", x+54).attr("y", y+107).attr("fill",this.baseText).attr('pointer-events','none');
-
-      var oGInfo = oGToolbar.append("g")
-      oGInfo.append("text").text("open >").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 12px;').attr("x", x+74).attr("y", y+107).attr("fill","#000").attr('pointer-events','none').attr('pointer-events','none');
-
-      //Favicon
-
-      oFavicon = oGWrap.append('image')
-      .attr('x', x + 8).attr('y', y + 95).attr('height',14).attr('width',14).attr('preserveAspectRatio', 'none')
-      .attr('xlink:href',  'http://www.google.com/s2/favicons?domain=' + s_data.s_link).attr('opacity', '0');
-
-      //Transitions
-      oElm.transition()
-        .duration(1000)
-        .attr("height", s_data.s_dim).ease('bounce')
-        .attr("opacity","1");
-
-      oGWrap.transition().duration(this.DURATION_1K).attr("opacity", "1").ease('fade');
-      oFavicon.transition().duration(this.DURATION_3K).attr("opacity", "1").ease('fade');
-
-      // Register Handlers 
-      on_click(oGWrap,s_data);
-      on_mouseover(oGWrap);
-      on_mouseout(oGWrap);
-      s_count++;
-      return oGWrap;
-    };
 
     function on_click(oGWrap,s_data){
-        oGWrap.on('click',function (){
+        d3.select(oGWrap).on('click',function (){
 
           // oloungeShapes.removeShape(d3.select(this));
           // return;
-          window.open(this.getAttribute('link'));
+
+          var select = d3.select(this);
+          
+          pointClient.pointTable.removePoint(select.datum(),select);
+          //window.open(this.getAttribute('link'));
       })
 
     };
 
 
     function on_mouseover(oGWrap){
-      oGWrap.on('mouseover',function (){
+      d3.select(oGWrap).on('mouseover',function (){
+          
+          var container = d3.select(this);
 
-          console.log('mouse over');
-          var oRect = this.getElementsByTagName('rect').item(0);
+          container.select('.shape').transition()
+               .duration(this.DURATION_S1K)
+               .attr('fill','#ECECDB').ease('fade');;
 
-          var select = d3.select(oRect)
-          select.transition()
-              .duration(this.DURATION_S1K)
-              .attr('fill','#ECECDB').ease('fade');;
-
-          var oText = this.getElementsByTagName('text').item(0);
-
-          select = d3.select(oText);
-
-
-          select.transition()
-              .attr('fill','#000').ease('fade');;
-          d3.select(this.getElementsByTagName("g").item(0)).transition().duration(this.DURATION_S1K).attr("display", "visible").ease('fade');;
+          container.select('.label').transition()
+               .attr('fill','#000').ease('fade');
 
       })
     };
 
     function on_mouseout(oGWrap){
 
-      oGWrap.on('mouseout',function (){
+      d3.select(oGWrap).on('mouseout',function (){
 
-          s_data = $.parseJSON(this.getAttribute('jsondata'));
+          
+          
+          var container = d3.select(this);
+          s_data  = d3.select(this).datum();
 
-          var oRect = this.getElementsByTagName('rect').item(0);
-          var select = d3.select(oRect)
-          select.transition()
-              .duration(this.DURATION_S1K)
-              .attr('fill',s_data.s_color).ease('fade');;
-          var oText = this.getElementsByTagName('text').item(0);
-          select = d3.select(oText);
-          select.transition()
-              .attr('fill','#FFF').ease('fade');
-          d3.select(this.getElementsByTagName("g").item(0)).transition().duration(this.DURATION_S1K).attr("display", "none").ease('fade');;
+          container.select('.shape').transition()
+               .duration(this.DURATION_S1K)
+               .attr('fill', s_data.s_color).ease('fade');;
+
+          container.select('.label').transition()
+               .attr('fill','#FFF').ease('fade');
+
       }) 
     }
 
+    function _setPoints(collection){
+      this.points = collection;
+    }
 
     //Theme colors
     this.baseText = '#fff';
-    this.baseTextStyle = 'font-family: Verdana; font-size: 20px';
+    this.baseTextStyle = 'font-family: Verdana; font-size: 16px';
     this.pointHover = '#ECECDB';
     this.baseToolbar = '#C2C7BE';
 
     this.DURATION_S1K = 450;
     this.DURATION_1K = 1000;
     this.DURATION_3K = 3000;
+    this.tableheight =600;
+    this.tablewidth= 700; 
     this.svg = d3.svg;
     this.domsvg = domsvg;
     this.bln_transitions = true;
     this.tile_width = 120; 
-    this.createElement = createElement;
+    this.points = null;
+
+    //functions exposed
+   
     this.removeAllTiles = removeAll;
+    this.renderAll = drawAll;
+    this.shapeCreateLabels = _shapeCreateLabels
+    this.shapeCreateHoverControls = _shapeCreateHoverControls;
+    this.shapeCreateRect = _shapeCreateRect;
+    this.setPoints = _setPoints;
+    
+
   }; 
 
 });

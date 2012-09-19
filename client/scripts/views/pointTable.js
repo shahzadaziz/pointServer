@@ -2,26 +2,27 @@ define([
 	'backbone',
 	'underscore',
 	'models/pointTable',
+    'models/PointsSync',
 	'views/point',
 	'd3',
 	'loung_svg_kit/shapes'
-], function(Backbone, _, _model, pointView,d3,shapes){
+], function(Backbone, _, _model, pointsSync , pointView,d3,shapes){
 	return Backbone.View.extend({
 
 		pointHash: {},
         p_count:0,
+        height: 600,
+        width: 700,
 
         el: $('body'),
 
 		initialize: function() {
 			this.tableInit();
 			pointClient.points = this.collection =  new _model();
+            pointClient.pointsSync = this.pointsSync = new pointsSync({model: this.collection.models});
 
      		this.collection.bind('reset',this.render,this);
-            this.collection.bind('add',this.addPoint,this);
-
-			
-			//this.shapes = new shapes();
+            
 		},	
  
 		render: function() {
@@ -45,27 +46,37 @@ define([
 
         addPoint: function(){
             oPoint = {};
-            _.each(this.$el.serializeArray(), function(_field){
+            _.each($('.addform').serializeArray(), function(_field){
                 oPoint[_field.name] =  _field.value;
             });
             //Todo 
             oPoint.id= Math.floor((Math.random()*10)+1);
-            oPoint.s_dim = '120';
-            oPoint.s_color = '';
-            this.removeall();
+            oPoint.s_dim = '150';
+            oPoint.s_color = '#CCC';
+            //this.removeall();
             this.collection.add(oPoint);
-            this.pointHash = {};
+            
             s_count = 0;
             this.render();
-            //App.points.add(oPoint);
-            //App.PointsSync.save();
-            //console.log(JSON.stringify(oPoint));
+
+            pointClient.syncType = 'sync';
+            this.pointsSync.save();
+        },
+
+        removePoint: function(data,shape){
+           
+            this.collection.remove(this.collection.get(data));
+            this.shapes.removeAllTiles(true);
+            pointClient.syncType = 'remove';
+            this.pointsSync.save();
+           
         },
 
         events: {
         	 'click .connect': 'connect',
              'click .save' : 'addPoint'
         },
+
 
         addHash: function(_point,_view){
             this.pointHash[_point.id] =  _view;
@@ -75,23 +86,36 @@ define([
 
         removeall: function(){
             this.pointHash = {};
-            //this.collection.reset();
             this.shapes.removeAllTiles();
-           /* _.each(this.pointHash,function(_point){
-                debugger;
-                _point.remove();      
-            });*/
+           
         },
 
-        redraw: function(){
 
+        dataCallback: function(data){
+            
+            var oClone = this.collection.dataSync(data.data);
+
+            switch(data.type){
+            
+                case 'remove':
+                    this.shapes.removeAllTiles(true);         
+                break;
+                
+                case 'sync':
+                    this.render();    
+                break;
+            
+            };
         },
 
         render: function(){
             
-             this.collection.each(function(point){
+             this.shapes.setPoints(this.collection);
+             var _tiles = this.shapes.renderAll(this.collection.toJSON());
+
+             /*this.collection.each(function(point){
                  pointClient.pointTable.addHash(point,(new pointView({model: point,shapes: pointClient.shapes}).render())); 
-            });
+            });*/
         },
 
         connect: function(){

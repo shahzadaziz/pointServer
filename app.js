@@ -45,6 +45,22 @@
   app.post('/points',function (req,res){
     console.log('Post request received from');
     console.log(req.query['sid']);
+
+    _sid = req.query['sid'];
+    _type = req.query['type'];
+    _post_data = '';
+    req.on('data',function(data){
+      //Todo Put limit on post stream to avoid payload attack
+      _post_data+= data;
+    });
+
+    req.on('end',function(){
+        //JSON received:: 
+        var _points = JSON.parse(_post_data);
+        console.log(_points);
+        if(_sid)(_sockets[_sid].broadcast.emit('data',{msg: 'Data added by ' +  socketToUsers[_sid], type: _type, data: _points}));
+
+    });
   });
 
   //Node IO logic
