@@ -18,6 +18,6 @@
     }  
 
     function logger(log,caller){
-        if(DEBUG)App.console.append('</br><span>:  ' +  caller + '</span>:  '+ log);
+        if(DEBUG)App.console.append('</br><span>:  ' +  caller + '></span>  '+ log);
     }
 

@@ -8,7 +8,7 @@ define(['models/point'],function(point) {
     function getGridLocation(index,s_data){
         
         index= index +1; //Start logic with 1
-        var tableWidth = 700;
+        var tableWidth = 800;
         row_count = Math.floor(tableWidth /s_data.s_dim) -1;
         row_num =   Math.ceil(index/row_count);
         row_index= index%row_count;
@@ -26,7 +26,7 @@ define(['models/point'],function(point) {
     function _shapeCreateLabels(containers){
       
       containers.append("text")
-          .attr('class','label')
+          .attr('class','tile_label')
           .attr('pointer-events','none')
           .attr('x' ,function(d,i) {return d.x + 10;})
           .attr("y", function(d,i) {return d.y + 40;}).text(function(d,i) {return d.s_label;})
@@ -47,16 +47,12 @@ define(['models/point'],function(point) {
       containers.append('g')
       .append("text").text("open >").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 12px;').attr("x", function(d,i) {return d.x + 74;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill","#000").attr('pointer-events','none');
 
-      //Favicon
-      containers.append('image')
-      .attr('x', function(d,i) {return d.x + 8;}).attr('y', function(d,i) {return d.y + 95;}).attr('height',14).attr('width',14).attr('preserveAspectRatio', 'none')
-      .attr('xlink:href',  function(d,i) {return 'http://www.google.com/s2/favicons?domain=' + d.s_link;}).attr('opacity', '0');
-
+     
     }
 
     function _shapeCreateRect(containers){
       var rects = containers.append('rect')
-            .attr('class','shape')
+            .attr('class','tile_shape')
             .attr("width", function(s_data,i){ return s_data.s_dim;})
             .attr("height", '0')
             .attr("fill", function(s_data,i){ return s_data.s_color;})
@@ -102,11 +98,19 @@ define(['models/point'],function(point) {
 
       var rects = this.shapeCreateRect(containers);
 
+       //Favicon
+      containers.append('image')
+      .attr('x', function(d,i) {return d.x + 8;}).attr('y', function(d,i) {return d.y + 95;}).attr('height',14).attr('width',14).attr('preserveAspectRatio', 'none')
+      .attr('xlink:href',  function(d,i) {return 'http://www.google.com/s2/favicons?domain=' + d.s_link;}).attr('opacity', '1');
+
+/*
+
       containers.append('image')
       .attr('x', function(d,i) {return d.x;}).attr('y', function(d,i) {return d.y;}).attr('height',function(d,i) { return d.s_dim})
       //.attr('width',function(d,i) { return d.s_dim})
       .attr('preserveAspectRatio', 'true')
       .attr('xlink:href',  'images/aa.jpg');
+*/
 /*
       setInterval(function(containers){ 
           // Content randomizer :: 
@@ -173,11 +177,11 @@ define(['models/point'],function(point) {
           
           var container = d3.select(this);
 
-          container.select('.shape').transition()
+          container.select('.tile_shape').transition()
                .duration(this.DURATION_S1K)
                .attr('fill','#ECECDB').ease('fade');;
 
-          container.select('.label').transition()
+          container.select('.tile_label').transition()
                .attr('fill','#000').ease('fade');
 
       })
@@ -192,11 +196,11 @@ define(['models/point'],function(point) {
           var container = d3.select(this);
           s_data  = d3.select(this).datum();
 
-          container.select('.shape').transition()
+          container.select('.tile_shape').transition()
                .duration(this.DURATION_S1K)
                .attr('fill', s_data.s_color).ease('fade');;
 
-          container.select('.label').transition()
+          container.select('.tile_label').transition()
                .attr('fill','#FFF').ease('fade');
 
       }) 

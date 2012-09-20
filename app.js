@@ -23,11 +23,29 @@
   //Node express routes
 	app.get('/', function (req, res) {
       console.log('Express Session id is ' + req.sessionID);
-      res.sendfile(__dirname + '/index.html');
+      res.sendfile(__dirname + '/index2.html');
                 
   });
 
   //Node Points REST API
+
+
+  //Node Points REST API
+  app.get('/tags', function (req, res) {
+
+      var socketID = req.query['sid'] || null;
+      
+      console.log('Express Tags route ' + socketID);
+      _file = fs.readFileSync(__dirname + '/data/tags.json');
+      _points = JSON.parse(_file);
+
+      
+      if(socketID)(_sockets[socketID].emit('msg_resp',{msg: 'Tags API called ' +  socketToUsers[socketID]}));
+      
+      res.send(_points);
+  });
+
+
   app.get('/points', function (req, res) {
 
       var socketID = req.query['sid'] || null;

@@ -13,8 +13,9 @@
 
 
 body {
-    font-family: "Dotum";
-    font-size: 12px
+    font-family: "consolas";
+    font-size: 12px;
+    line-height: normal;
 }
 
 
@@ -22,106 +23,28 @@ root,header,footer,section, div{
     display: block;
 }
 
-
-.content{
-  
-}
-
-.left_content{
-  float: left;
-}
-
-.right_content{
-  float: left;
-  margin-top: 15px;
-  padding: 5px;
-  width: 400px;
-  
-}
+h2{font-size: 20px;}
 
 #lounge_add_canvas{
-  height: 600px;
-  width: 700px;
-  margin-left: 40px;
+  margin-left: 5px;
   margin-top: 20px;
  }
-
-.toolbar{height: 40px; }
-
-.toolbar div{
-  float: left;
-}
-
-.connect{
-  background: url('images/add.png');
-  width: 24px;
-  height: 24px;
-  margin-top: 10px;
-  
-}
-
-.connect:hover{
-  background: url('images/add_hover.png');
-}
-
-
-
-.save{
-  background: url('images/add.png');
-  width: 24px;
-  height: 24px;
-  margin-top: 10px;
-  
-}
-
-.save:hover{
-  background: url('images/add_hover.png');
-}
-
-
-.add{
-  background: url('images/add.png');
-  width: 24px;
-  height: 24px;
-  margin-top: 10px;
-  
-}
-
-.add:hover{
-  background: url('images/add_hover.png');
-}
 
 
 #client-console{
     
-    font-size: 12px;
-    color: #CCC;
+    font-size: 10px;
+    color: #333;
     height: 300px;
-    width: 400px;
-    font-family: verdana;
+    font-family: consolas;
     margin-bottom: 10px;
     margin-top: 4px;
     
 }
 
 #client-console span{
-    color: #222;
+    color: blue;
 }
-
-.addform{
-  margin-bottom: 10px;
-  margin-top: 10px;
-  color: #C92F33;
-}
-
-
-.addform input{
-  color: #C92F33;
-  margin-left: 15px;
-  margin-right: 15px;
-  width: 100px;
-}
-
 
 
 .description {
@@ -138,3 +61,29 @@ root,header,footer,section, div{
   width: auto;
 }
 
+
+
+/*   Theme  */
+
+.container-fluid > .sidebar {
+    position: relative;
+    top: 0;
+    left:auto;
+    width: 240px;
+}
+
+.left {
+    float:left;
+    
+    
+}
+
+.right {
+    float:right;
+    
+}
+
+.container-fluid > .content {
+    margin: 0 240px;
+}
+​

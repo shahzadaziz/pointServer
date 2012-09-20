@@ -7,6 +7,7 @@
 
     require.config({
     'paths': {
+        'bootstrap': 'bootstrap/js/bootstrap.min.js',
         'jquery': 'libs/jquery',
         'backbone': 'libs/backbone',
         'underscore': 'libs/underscore',
@@ -36,6 +37,7 @@
 require([
     'views/mainView',
     'views/socketController'
+
 ], function(mainView,socketIO) {
     
     pointClient.console =$('#client-console');      

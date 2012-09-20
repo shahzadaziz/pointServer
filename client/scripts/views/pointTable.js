@@ -4,9 +4,10 @@ define([
 	'models/pointTable',
     'models/PointsSync',
 	'views/point',
+    'views/tagSidebar',
 	'd3',
 	'loung_svg_kit/shapes'
-], function(Backbone, _, _model, pointsSync , pointView,d3,shapes){
+], function(Backbone, _, _model, pointsSync , pointView,tagSidebar,d3,shapes){
 	return Backbone.View.extend({
 
 		pointHash: {},
@@ -19,8 +20,7 @@ define([
 		initialize: function() {
 			this.tableInit();
 			pointClient.points = this.collection =  new _model();
-            pointClient.pointsSync = this.pointsSync = new pointsSync({model: this.collection.models});
-
+            pointClient.pointsSync = this.pointsSync = new pointsSync({model: this.collection.models}); 
      		this.collection.bind('reset',this.render,this);
             
 		},	
@@ -32,7 +32,7 @@ define([
         tableInit: function(){
      
             //D3 Intialization
-           
+            pointClient.tagSidebar = this.tagSidebar = new tagSidebar();
             svg = d3.select('svg').attr("width", "100%").attr("height", "100%");
             domsvg = document.getElementsByTagName('svg').item(0);
             pointClient.shapes = this.shapes = new shapes(svg,domsvg);
@@ -126,7 +126,7 @@ define([
             IO.registerUserName(user_name);
             //move to callback
             this.fetchPoints();
-
+            this.tagSidebar.fetchTags();
         }
 
 
