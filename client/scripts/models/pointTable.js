@@ -8,6 +8,7 @@ define([
         url: function(){ return '/points?sid='+pointClient.socketIO.socket.sessionid},
 
         parse: function(response){
+            pointClient.autoid = parseInt(response.autoid);
             return response.points;
         },
 

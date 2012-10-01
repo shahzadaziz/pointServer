@@ -7,8 +7,8 @@
 
     require.config({
     'paths': {
-        'bootstrap': 'bootstrap/js/bootstrap.min.js',
         'jquery': 'libs/jquery',
+        'bootstrap': 'bootstrap/js/bootstrap',
         'backbone': 'libs/backbone',
         'underscore': 'libs/underscore',
         'd3': 'libs/d3'
@@ -35,7 +35,7 @@
     });
 
 require([
-    'views/mainView',
+    'views/boardView',
     'views/socketController'
 
 ], function(mainView,socketIO) {
@@ -50,13 +50,21 @@ require([
     pointClient.Router = Backbone.Router.extend({
         routes : {
             "": "defaultRoute",
-            "home": "defaultRoute" 
+            "home": "lounge" 
         },
+
+        register: function(){
+        
+            
+        },
+
         defaultRoute: function(){
 
-            logger('Social points home','Router');
+            logger('Welcome to points Lounge','Router');
+            logger('Beta version  Created by Shahzad Aziz','Router');
+            logger('Start consuming','Router');
             pointClient.socketIO = socketIO;
-            pointClient.Views.mainView = new mainView(); 
+            pointClient.mainView = new mainView(); 
             pointClient.socketIO.connect();
             
         }

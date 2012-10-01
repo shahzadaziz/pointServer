@@ -14,7 +14,10 @@
         url: function(){ return '/points?sid='+pointClient.socketIO.socket.sessionid + '&type=' +  pointClient.syncType},
 
         toJSON: function(){
-            return _.clone(pointClient.points).toJSON();
+            var writeObj = {};
+            writeObj.autoid = pointClient.autoid;
+            writeObj.points = pointClient.points.toJSON();
+            return writeObj;
         },
         
     });

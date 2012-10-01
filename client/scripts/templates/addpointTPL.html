@@ -1,0 +1,50 @@
+
+
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Add Point</h3>
+  </div>
+  <div class="modal-body">
+
+      <div>
+          <form class="addform">
+              
+              <div class="controls input-prepend">
+                <span class="add-on">Label</span>
+                <input type="text" placeholder="e.g Google…" name="s_label" value="<%=point.s_label%>"></input>
+              </div>
+           
+              <div class="controls input-prepend">
+                <span class="add-on">http://</span>
+                <input class="input-large" name="s_link" type="text" value="<%=point.s_link%>">
+              </div>
+                     
+
+            
+              <label>Description</label>
+              <textarea class="input-large" name="s_desc" rows="3"><%=point.s_desc%></textarea>
+            
+            <div class="controls input-prepend">
+              <span class="add-on">Tile Color</span>
+              <input type="text" class="tcolor input-mini" name="s_color" value="<%=point.s_color%>"></input>
+            </div>
+
+          </form>            
+      
+    </div>
+
+
+    <div class="pull-right">
+    <% _.each(tags,function(tag){ %>
+      <button type="button" class="btn btn-mini" data-toggle="button"><i class="icon-tag"></i><%=tag.t_name%></button>
+    <%
+    });
+    %>
+    </div> 
+
+  <div class="modal-footer">
+    
+      <button class="btn add"><i class="icon-plus"></i>save</button> 
+      <button class="btn drop"><i class="icon-remove"></i>close</button>
+    
+  </div>

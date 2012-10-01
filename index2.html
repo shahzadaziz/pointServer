@@ -5,8 +5,10 @@
     <title>Backbone Demo APP</title>
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/globals.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
     <link href="scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="scripts/bootstrap/colorpicker/css/colorpicker.css" />
     <script data-main="scripts/main" src="scripts/require.js"></script>
     
     
@@ -15,18 +17,19 @@
 
 <div class="navbar">
   <div class="navbar-inner">
-    <a class="brand logo" href="#">pointlounge</a>
+    <a class="brand logo point_txt" href="#">pointlounge</a>
     <ul class="nav">
+      <li class="divider-vertical"></li>
       <li class="active"><a href="#">Library</a></li>
-      <li class="divider-vertical"></li>
+      <!-- <li class="divider-vertical"></li> -->
       <li><a href="#">Social</a></li>
-      <li class="divider-vertical"></li>
+      <!-- <li class="divider-vertical"></li> -->
       <li><a href="#">Stream</a></li>
-      <li class="divider-vertical"></li>
+      <!-- <li class="divider-vertical"></li> -->
       <li><a href="#">Me</a></li>
-      <li class="divider-vertical"></li>
-      <p>Consuming web content a new way</P>
+      <!-- <li class="divider-vertical"></li> -->
     </ul>
+    <p class="navbar-text pull-right">Consuming web a new way</P>
 
   </div>
 </div>
@@ -34,51 +37,60 @@
 
 <div class="container-fluid">
     <div class="sidebar left">
-      <h2>:/>console</h2> 
-      <div id='client-console'></div>        
+      
+      <div class="board_block">
+          <p>Fuzzy points for quick search in points. Start with <b>@</b> to shuffle between tags.</p>
+          Press Ctrl + i to quickly jump to fuzzy search
+
+      </div>
+      <input id="pfilter" class="pull-left" type="text" placeholder="fuzzy points" data-provide="typeahead"></input>
+
+      console 
+      <div id='client-console' class="client-console"></div>        
     </div>
-  
+          
     <div class="sidebar right">        
       <div>    
           <div class="tag_sidebar"></div>
-          <legend>Connect</legend>
-          <label>user</label>
-          <input id="username" type="text" placeholder="Type username…"></input>
-          <button class="btn connect"><i class="icon-retweet"></i></button>
-      </div>
-
-
-      <div>
-          <form class="addform">
-            <legend>Add point</legend>
-            <label>label</label>
-            <input type="text" placeholder="e.g Google…" name="s_label"></input>
-            <label>Link http://</label><input name="s_link"></input>
-            <button class="btn add"><i class="icon-plus"></i></button>
+          
             
-          </form>        
+              <input id="username" class="pull-left" type="text" placeholder="Type username…"></input>
+              <button class="btn connect" id="connect"><i class="icon-retweet"></i></button>
+              <ul class="tag_list"></ul>
+
+
       </div>
+
+
     </div>
 
     <div class="content">
-        <div class="btn-toolbar">
+
+            
+        <div class="btn-toolbar point_toolbar" id="p_tb">
             <div class="btn-group">
            
-              <button class="btn btn-inverse"><i class="icon-white icon-th-large"></i></button>
-              <a class="btn" href="#"><i class="icon-align-center"></i></a>
-              <a class="btn" href="#"><i class="icon-align-right"></i></a>
-              <a class="btn" href="#"><i class="icon-align-justify"></i></a>
+              <button class="btn" action='add'><i class="icon-plus-sign"></i></button>
+              <button class="btn" action='rem'><i class="icon-trash"></i></button>
+              <button class="btn" action='ed'><i class="icon-pencil"></i></button>
+              <a class="btn" action='sort' href="#"><i class="icon-align-center"></i></a>
+              
+              
+            
             </div>
         </div>
 
         <div class="content_column" id="lounge_add_canvas">
           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <!-- <rect width="100%" fill="#F5F4F2" x="0" y="0" height="100%"></rect> -->
           </svg>
         </div>
       <footer>
           <p>&copy; shahzad aziz -2012</p>
       </footer>
     </div>
+
+    <div id="modal" class="modal hide fade"></div>
 </div>
 
 </body>

@@ -5,7 +5,7 @@ define([
     
 ], function(Backbone, _,Collection) {
     return Backbone.View.extend({
-        el: $('.tag_sidebar'),
+        el: $('.tag_list'),
 
         initialize: function() {
            pointClient.tags = this.collection = new Collection();
@@ -18,14 +18,16 @@ define([
  
         render: function() {
             var me = this;
+          
             this.collection.each(function(tag,i,me){
             
-                $('<span class="badge badge-warning">'+ tag.attributes.t_name+'</span></br></br>')
+                $('<li><i class="icon-tag"></i>'+ tag.attributes.t_name+'</li>')
                 .hide()
                 .appendTo(pointClient.tagSidebar.$el)
                 .fadeIn('slow');
                 
             });
+
         }
 
     });

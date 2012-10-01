@@ -1,0 +1,13 @@
+{
+
+	"board": {
+		"boardid": "1221",
+		"name": "JavaScript , Gurus you should follow",
+		"description": "<b>Web points for JavaScript coders and people to follow.</b> These include a list of popular authors , coders , engineers working at google, Facebook etc. Pioneers of various revolutionary frameworks in JS",
+		"viewtype": "tile",
+		"ownerid": "shahzad@confiz.com",
+		"taggroup": "tags1221",
+		"pointsgroup": "points1221"
+
+	}
+}

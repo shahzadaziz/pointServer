@@ -1,0 +1,29 @@
+
+// Point lounge tasks and think tank
+
+ 
+Today for Pointlounge:
+ ☐ complete tile UI svg and interface @svg, @client
+ ☐ implement fuzzy search on points @client
+ --- ✄ -----------------------
+
+ Think Cloud:
+ ☐ Need to define an inteface to expose multiple tile designs.. Expose json for tile designs
+ ☐ need to make abtract view classes . Plug and play different views
+ ☐ Google chrom plugin
+ ☐ Think about refing console
+
+Client side:
+
+ ☐ Implement autocomplete on fuzzy search
+ ☐ Implement @ tag functionality in fuzzy search
+ ☐ add Go live button to toolbar
+ ☐ complete edit form for a tile
+ ☐ UI logic and aestheics for remove and edit mode
+ ☐ Create worker thread for sync and operations on backbone collection
+
+ 
+Server side:
+
+ ☐ Mongo DB integration
+ ☐ Broadcast and Socket IO for click events

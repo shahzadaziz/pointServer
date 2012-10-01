@@ -24,6 +24,11 @@ define(['models/point'],function(point) {
     }
 
     function _shapeCreateLabels(containers){
+
+      if(containers.select('.tile_label')[0][0]  != null){
+        containers.select('.tile_label').text(function(d,i) {return d.s_label;});
+        return;
+      }
       
       containers.append("text")
           .attr('class','tile_label')
@@ -33,42 +38,141 @@ define(['models/point'],function(point) {
           .attr('fill',this.baseText)
           .attr('style',this.baseTextStyle)
           .attr('text-antialiasing','true');
-
     }
 
-
     function _shapeCreateHoverControls(containers){
-      containers = containers.append('g').attr('class','hover').attr('opacity', '0');
+      containers.append('text')
+        
+        .attr('x',function(d,i){return (d.x + d.s_dim) -22;})
+        .attr('y',function(d,i){return (d.y + d.s_dim) -10;})
+        .attr('fill','#fff')
+        .text(function(d,i){return d.s_c | 0;});
+        
+      /*containers = containers.append('g').attr('class','hover').attr('opacity', '0');
 
       containers.append('g')
       .append("rect").attr("width" , "18").attr("height","18").attr("x", function(d,i) {return d.x + 30;}).attr("y", function(d,i) {return d.y + 95;}).attr("fill",'#C2C7BE').attr('pointer-events','none')
-      .append("text").text("x").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 14px;').attr("x", function(d,i) {return d.x + 34;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill",this.baseText).attr('pointer-events','none');
+      .append("text").text("x").attr('text-antialiasing','true').attr('style','font-family: ; font-size: 14px;').attr("x", function(d,i) {return d.x + 34;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill",this.baseText).attr('pointer-events','none');
 
       containers.append('g')
-      .append("text").text("open >").attr('text-antialiasing','true').attr('style','font-family: Dotum; font-size: 12px;').attr("x", function(d,i) {return d.x + 74;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill","#000").attr('pointer-events','none');
-
-     
+      .append("text").text("open >").attr('text-antialiasing','true').attr('style','font-family: ; font-size: 12px;').attr("x", function(d,i) {return d.x + 74;}).attr("y", function(d,i) {return d.y + 107;}).attr("fill","#000").attr('pointer-events','none');*/
     }
 
     function _shapeCreateRect(containers){
-      var rects = containers.append('rect')
-            .attr('class','tile_shape')
-            .attr("width", function(s_data,i){ return s_data.s_dim;})
-            .attr("height", '0')
-            .attr("fill", function(s_data,i){ return s_data.s_color;})
-            .attr("x", function(s_data,i){ x = getGridLocation(i,s_data).x; s_data.x = x; return x;})
-            .attr("y", function(s_data,i){ y = getGridLocation(i,s_data).y; s_data.y = y; return y;});
 
-      return rects; 
+      if(containers.select('.tile_shape')[0][0]  != null){
+        containers.select('.tile_shape').attr("fill", function(s_data,i){ 
+          var pt = getGridLocation(i,s_data); 
+          s_data.x = pt.x;
+          s_data.y = pt.y;
+          return s_data.s_color;
+        });
+        return;
+      }else{
+        var rects = containers.append('rect')
+              .attr('class','tile_shape')
+              .attr("width", function(s_data,i){ return s_data.s_dim;})
+              .attr("height", '0')
+              .attr("fill", function(s_data,i){ return s_data.s_color;})
+              .attr("x", function(s_data,i){ x = getGridLocation(i,s_data).x; s_data.x = x; return x;})
+              .attr("y", function(s_data,i){ y = getGridLocation(i,s_data).y; s_data.y = y; return y;});
+
+        return rects; 
+      }
     }
 
 
- 
+     function _shapeDescriptionContainer(containers){
+      if(containers.select('.sdesc')[0][0]  != null){
+        //containers.select('.sdesc').remove();
+        //return;
+        containers.select('p').html(function(d,i){ return '<div class="s_desc">' + d.s_desc.substring(0,90) + '...<div>';});
+        //containers.select('.sdesc').attr("fill", function(s_data,i){ return s_data.s_color;})
+        return;
+      }
+        var htmlContent = containers.append('foreignObject')
+            .attr('class', 'sdesc')
 
-    function drawAll(jsonObj){
+            .attr('x', function(d,i){return d.x + 10;})
+            .attr('y', function(d,i){return d.y + 50;})
+            .attr('width', function(d,i){return d.s_dim -30;})
+            .attr('height', function(d,i){return d.s_dim -20;})
+            .attr('pointer-events','none')
+            .append("xhtml:p")
+            .html(function(d,i){ 
+              return '<div class="s_desc">' + 
+                d.s_desc.substring(0,90) + 
+                '<div>';});
+
+
+    }
+
+
+    function _updateShape(d,i, container){
       
-      var selection = svg.selectAll('.tiles')
-        .data(jsonObj);
+      //empty container here :: so code can be resused::
+      //_emptyShapeContainer(container);      
+              
+      //update g container:
+      container
+      .attr('link',d.s_link)
+          .attr('label',d.s_label)
+          .attr('jsondata', JSON.stringify(d));
+
+      //container.select('.sdesc').remove();
+      //container.select('.favic').remove();  
+          
+      _shapeCreateLabels(container);
+      _shapeCreateRect(container);
+      _shapeFavicon(container);
+      _shapeDescriptionContainer(container);
+      //_shapeCreateHoverControls(container);
+    }
+
+    function _shapeFavicon(containers){
+
+       //Favicon
+      if(containers.select('.favic')[0][0]  != null){
+          containers.select('.favic').attr('xlink:href',  function(d,i) {return 'https://getfavicon.appspot.com/http://'+d.s_link;}) 
+            // 'http://www.google.com/s2/favicons?domain=' + d.s_link;})
+          .attr('opacity', '1');
+          return;
+      }
+
+      containers.append('image')
+      .attr('class','favic')
+      .attr('x', function(d,i) {return d.x + 10;}).attr('y', function(d,i) {return d.y + 120;}).attr('height',16).attr('width',16).attr('preserveAspectRatio', 'none')
+      .attr('xlink:href',  function(d,i) {return 'https://getfavicon.appspot.com/http://'+d.s_link;}).attr('opacity', '1');
+
+    }
+
+    function _emptyShapeContainer(container){
+      container.select('.sdesc').remove();
+      container.select('.tile_label').remove();  
+      container.select('.hover').remove();  
+      container.select('.favic').remove();  
+      
+    }
+
+    function _selectBy(collection){
+        
+        var selection = svg.selectAll('.tiles').data(collection.toJSON()).attr('index', function(d,i){ 
+            _updateShape(d,i,d3.select(this));
+            return i;
+        });
+
+        var containers = this.enterSelection(selection);
+
+        selection.exit()
+        .remove();
+
+        containers.transition().attr('opacity','1');
+        containers.selectAll('.tile_shape').transition().attr('height', function(d,i) {return d.s_dim;});        
+
+    }
+
+
+    function _enterSelection(selection){
 
       var containers = selection.enter()
         .append('g')
@@ -89,38 +193,9 @@ define(['models/point'],function(point) {
           .attr('link',function(d,i){ return d.s_link})
           .attr('label',function(d,i){ return d.s_label})
           .attr('jsondata', function(d,i){ return JSON.stringify(d);});
-                    /*
-      selection.exit().transition().delay(function(d,i){return i* 50})
-        .duration(this.DURATION_S1K).attr('opacity','0')
-        .each('end',function(){d3.select(this).remove(); 
-          pointClient.shapes.renderAll(pointClient.pointTable.collection);
-        });*/
 
       var rects = this.shapeCreateRect(containers);
-
-       //Favicon
-      containers.append('image')
-      .attr('x', function(d,i) {return d.x + 8;}).attr('y', function(d,i) {return d.y + 95;}).attr('height',14).attr('width',14).attr('preserveAspectRatio', 'none')
-      .attr('xlink:href',  function(d,i) {return 'http://www.google.com/s2/favicons?domain=' + d.s_link;}).attr('opacity', '1');
-
-/*
-
-      containers.append('image')
-      .attr('x', function(d,i) {return d.x;}).attr('y', function(d,i) {return d.y;}).attr('height',function(d,i) { return d.s_dim})
-      //.attr('width',function(d,i) { return d.s_dim})
-      .attr('preserveAspectRatio', 'true')
-      .attr('xlink:href',  'images/aa.jpg');
-*/
-/*
-      setInterval(function(containers){ 
-          // Content randomizer :: 
-
-          svg.selectAll('.tiles > image').transition().duration(1000).delay(function(d,i){return (Math.floor((Math.random()*10)+1) *i)}).attr('width',function(d,i){
-            return ((Math.random()*0)+1) ? 150: 0;
-          });
-
-      }, 4000);
-*/
+      _shapeDescriptionContainer(containers);
 
       //labels
       this.shapeCreateLabels(containers);      
@@ -128,18 +203,34 @@ define(['models/point'],function(point) {
       //toolbar controls
       this.shapeCreateHoverControls(containers);
 
-      //transitions 
-      containers.transition().delay(function(d,i){return i* 50}).duration(this.DURATION_S1K).attr('opacity','1');
-      rects.transition().delay(function(d,i){return i* 50}).duration(this.DURATION_1K).attr('height', function(d,i) {return d.s_dim;}).ease('bounce');        
+      _shapeFavicon(containers);
+      return containers;        
+    }
 
+    function drawAll(jsonObj,bln_t){
+      
+      var selection = svg.selectAll('.tiles')
+        .data(jsonObj);
+
+      var containers = this.enterSelection(selection);
+      //transitions 
+      if(bln_t){
+        containers.transition().delay(function(d,i){return i* 50}).duration(this.DURATION_S1K).attr('opacity','1');
+        containers.selectAll('.tile_shape').transition().delay(function(d,i){return i* 50}).duration(this.DURATION_1K).attr('height', function(d,i) {return d.s_dim;}).ease('bounce');        
+      }else{
+        containers.transition().attr('opacity','1');
+        containers.selectAll('.tile_shape').transition().attr('height', function(d,i) {return d.s_dim;});        
+      }
 
     }
 
 
-    function removeAll(blnRender){
+    function removeAll(blnRender,bln_t){
       pointClient.blnRender = blnRender;
 
       var select = d3.selectAll('svg > g');
+
+      if(bln_t){
       select.transition()
         .duration(this.DURATION_S1K)
         .delay(function(d, i) { return i * 100; })
@@ -153,6 +244,10 @@ define(['models/point'],function(point) {
             pointClient.pointTable.render();
           } 
           });
+      }else{
+        select.remove();
+        return (pointClient.blnRender) ?  pointClient.pointTable.render() : '';
+      }
       
     }
 
@@ -160,13 +255,33 @@ define(['models/point'],function(point) {
     function on_click(oGWrap,s_data){
         d3.select(oGWrap).on('click',function (){
 
-          // oloungeShapes.removeShape(d3.select(this));
-          // return;
 
           var select = d3.select(this);
-          
-          pointClient.pointTable.removePoint(select.datum(),select);
-          //window.open(this.getAttribute('link'));
+        
+
+          if(pointClient.mode == MODE_R){
+            pointClient.pointTable.removePoint(select.datum(),select);
+          }
+          else if(pointClient.mode == MODE_E){
+            pointClient.pointTable.selected = select.datum();
+            pointClient.mainView.initPointAdd();
+          }
+          else{
+            s_data = select.datum();
+            select.select('.tile_shape').transition()
+                 .duration(this.DURATION_S1K)
+                 .attr('fill', s_data.s_color).ease('fade');;
+
+            select.select('.tile_label').transition()
+                 .attr('fill','#FFF').ease('fade');
+
+            select.select('.sdesc').transition()
+                .attr('class','s_desc').ease('fade');
+
+            //Click Count maintain
+            pointClient.pointTable.clickPoint(select.datum());
+            
+          }          
       })
 
     };
@@ -182,7 +297,11 @@ define(['models/point'],function(point) {
                .attr('fill','#ECECDB').ease('fade');;
 
           container.select('.tile_label').transition()
-               .attr('fill','#000').ease('fade');
+               .attr('fill',function(d,i){return d.s_color;}).ease('fade');
+          container.select('.sdesc').transition()
+              .attr('class','s_deschover').ease('fade');
+
+
 
       })
     };
@@ -203,7 +322,20 @@ define(['models/point'],function(point) {
           container.select('.tile_label').transition()
                .attr('fill','#FFF').ease('fade');
 
+          container.select('.sdesc').transition()
+              .attr('class','s_desc').ease('fade');
+
+
       }) 
+    }
+
+    function _setSVGDims(s_dim){
+      
+      n_tiles = Math.floor(this.tablewidth/s_dim);
+      n_rows = Math.ceil(pointClient.points.length/n_tiles);
+      height = (n_rows * s_dim) +  (15 * n_rows);
+      svg.attr('height', height); 
+      
     }
 
     function _setPoints(collection){
@@ -212,7 +344,7 @@ define(['models/point'],function(point) {
 
     //Theme colors
     this.baseText = '#fff';
-    this.baseTextStyle = 'font-family: Verdana; font-size: 16px';
+    this.baseTextStyle = 'font-family: Lato; font-size: 18px;';
     this.pointHover = '#ECECDB';
     this.baseToolbar = '#C2C7BE';
 
@@ -235,7 +367,10 @@ define(['models/point'],function(point) {
     this.shapeCreateHoverControls = _shapeCreateHoverControls;
     this.shapeCreateRect = _shapeCreateRect;
     this.setPoints = _setPoints;
-    
+    this.selectBy = _selectBy;
+    this.enterSelection =_enterSelection;
+    this.setSVGDims = _setSVGDims;
+
 
   }; 
 

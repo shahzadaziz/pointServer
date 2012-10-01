@@ -13,25 +13,46 @@
 
 
 body {
-    font-family: "consolas";
+    font-family: "Lato";
     font-size: 12px;
     line-height: normal;
 }
-
-
-root,header,footer,section, div{
-    display: block;
-}
+root,header,footer,section, div{display: block;}
+/* Lounge typography*/
 
 h2{font-size: 20px;}
+p{ color: #E67300 !important;}
+.s_desc{color: #ECECDB; font-size: 9px; font-family: Verdana; height: 70px;}
+.s_desc span{color: #000; font-weight: bold; margin-left: 20px;}
+.board_block p{color: #333 !important; }
+.board_block {color: #666; padding: 7px; font-family: Arial;}
+
+/*End typography*/
+
+
+.point_toolbar{ margin-left: 19px;}
+
+/*overidden styles*/
+.navbar .brand{ font-size: 16px;}
 
 #lounge_add_canvas{
   margin-left: 5px;
   margin-top: 20px;
  }
 
+ .tag_sidebar{
+  
+  font-size: 14px;
+  padding: 5px;
+  margin-top: 65px;
+  margin-bottom: 9px;
+ }
 
-#client-console{
+ .tag_list{list-style: none;}
+
+ .tag_list li{ margin: 4px;}
+
+.client-console{
     
     font-size: 10px;
     color: #333;
@@ -42,8 +63,8 @@ h2{font-size: 20px;}
     
 }
 
-#client-console span{
-    color: blue;
+.client-console span{
+    color: #333;
 }
 
 
@@ -63,13 +84,15 @@ h2{font-size: 20px;}
 
 
 
-/*   Theme  */
+/*   Theme Fluid */
 
 .container-fluid > .sidebar {
     position: relative;
     top: 0;
     left:auto;
     width: 240px;
+    background-color: #F5F4F2;
+    min-height: 500px;
 }
 
 .left {
