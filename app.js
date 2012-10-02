@@ -120,6 +120,10 @@
 
 			});
 
+			socket.on('point',function(data,callback){
+				socket.broadcast.emit('point',data);
+			});
+
 
 			socket.emit('handshake', { msg: 'Node response - Connected' });
 			

@@ -17,6 +17,7 @@ define([
         selected: null,
         filterColl : null,
 
+
         el: $('body'),
 
 		initialize: function(options) {
@@ -77,7 +78,7 @@ define([
         },
 
         removePoint: function(data,shape){
-            debugger;
+            
             this.collection.remove(this.collection.get(data));
             this.shapes.removeAllTiles(true);
             pointClient.syncType = 'remove';
@@ -165,7 +166,7 @@ define([
 
         connect: function(){
 
-            var IO = pointClient.socketIO;
+            var IO = pointClient.socketController;
             var user_name = $('#username').val() || 'Guest';
             
             IO.registerUserName(user_name);
@@ -186,6 +187,9 @@ define([
                 }else{
                     _model.set('s_c', (_model.get('s_c') + 1));
                 }
+
+                //sync Model actions across clients
+                pointClient.socketController.emit('point',_model.toJSON());
             }
 
             window.open('http://' + datum.s_link, '_blank');

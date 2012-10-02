@@ -7,6 +7,7 @@ define(function() {
         this.socket = IO.socket;
         this.IO = IO;
 
+            //callbacks
             IO.on('handshake', function (data) {
                logger(data.msg,'SocketIO');
                logger(IO.socket.sessionid,'SocketIO');
@@ -25,7 +26,15 @@ define(function() {
                 console.log(data.data);
                 pointClient.pointTable.dataCallback(data);
             });
+
+            IO.on('point',function(data){
+              debugger;
+            });
     	},
+
+      emit : function(handle, object){
+        this.IO.emit(handle, JSON.stringify(object));
+      },
 
       registerUserName: function(_user){
           this.IO.emit('username', {username: _user},function(data){

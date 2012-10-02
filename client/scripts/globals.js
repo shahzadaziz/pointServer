@@ -18,7 +18,7 @@
         mode: 'n',
         autoid: 0
 
-    }  
+    }
 
     var pfilter= {
         attr: null,
@@ -27,7 +27,7 @@
     }
 
 
-    //Statics 
+    //Statics
     var MODE_N = 'n';
     var MODE_R = 'r';
     var MODE_E = 'e';

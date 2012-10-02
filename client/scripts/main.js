@@ -63,9 +63,10 @@ require([
             logger('Welcome to points Lounge','Router');
             logger('Beta version  Created by Shahzad Aziz','Router');
             logger('Start consuming','Router');
-            pointClient.socketIO = socketIO;
+            pointClient.socketController = socketIO;
+
             pointClient.mainView = new mainView(); 
-            pointClient.socketIO.connect();
+            pointClient.socketController.connect();
             
         }
 

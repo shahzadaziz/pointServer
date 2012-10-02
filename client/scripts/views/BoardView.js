@@ -16,7 +16,7 @@ define([
         pfilter: null,
 
         //Reference to Socket controller
-        socketController: pointClient.socketIO,
+        socketController: pointClient.socketController,
 
         initialize: function(){
             this.views_init();

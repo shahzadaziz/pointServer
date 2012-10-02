@@ -44,15 +44,15 @@ define([
 
         newPoint: function(){
             
-
             oPoint = {};
+            debugger;
             _.each($('.addform').serializeArray(), function(_field){
                 oPoint[_field.name] =  _field.value;
             });
             
             oPoint.s_dim = '150';
             this.$el.modal('hide');
-            
+                
             if(pointClient.mode == MODE_E){
                 this.table.updatePoint(oPoint);
             }else{

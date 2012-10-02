@@ -5,7 +5,7 @@ define([
 	return Backbone.Collection.extend({
 		model: point,
 
-        url: function(){ return '/points?sid='+pointClient.socketIO.socket.sessionid},
+        url: function(){ return '/points?sid='+pointClient.socketController.socket.sessionid},
 
         parse: function(response){
             pointClient.autoid = parseInt(response.autoid);
